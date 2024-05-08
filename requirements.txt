@@ -1,4 +1,5 @@
 networkx
+numpydoc
 pandas
 pydata-sphinx-theme
 sphinx

@@ -1,0 +1,4 @@
+compatsphinxext
+===============
+
+See README.md

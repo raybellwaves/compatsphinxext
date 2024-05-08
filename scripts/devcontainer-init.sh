@@ -4,4 +4,4 @@ set -euo pipefail
 sudo apt-get update
 sudo apt-get install make
 
-pip install --user networkx pandas pydata-sphinx-theme sphinx
+pip install --user networkx numpydoc pandas pydata-sphinx-theme sphinx
