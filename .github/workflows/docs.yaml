@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-python@v3
       - name: Install dependencies
         run: |
-          pip install networkx pandas pydata-sphinx-theme sphinx
+          pip install networkx numpydoc pandas pydata-sphinx-theme sphinx
       - name: Sphinx build
         run: |
           sphinx-build docs/source _build
