@@ -1,4 +1,4 @@
 compatsphinxext
 ===============
 
-See README.md
+blah blah blah
