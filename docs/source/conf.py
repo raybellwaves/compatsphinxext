@@ -3,7 +3,7 @@ import pathlib
 import subprocess
 import sys
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
-# sys.path.append(os.path.abspath("./_ext"))
+sys.path.append(os.path.abspath("./_ext"))
 print(f"{sys.path=}")
 if "CONDA_DEFAULT_ENV" in os.environ or "conda" in sys.executable:
     print("conda environment:")
@@ -20,6 +20,7 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
     "sphinx.ext.intersphinx",
+    "PandasCompat",
 ]
 
 exclude_patterns = []
@@ -27,6 +28,8 @@ pygments_style = "sphinx"
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 templates_path = ["_templates"]
+
+include_pandas_compat = True
 
 autosummary_generate = True
 
