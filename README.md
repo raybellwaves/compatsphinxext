@@ -7,3 +7,6 @@ Host on rapids-contrib, Publish it on pypi then it can be used across cudf and c
 
 cudf and cugraph uses "numpydoc" (https://github.com/rapidsai/cudf/blob/branch-24.06/docs/cudf/source/conf.py#L72C6-L72C14)
 
+The only file to touch is the make_files.sh
+
+
