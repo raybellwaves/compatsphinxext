@@ -17,6 +17,7 @@ author = "RAPIDS contrib"
 
 extensions = [
     "numpydoc",
+    "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
     "sphinx.ext.intersphinx",

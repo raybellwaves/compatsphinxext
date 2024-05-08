@@ -29,7 +29,6 @@ def create_meal_df(n: int = 5, country: str = "italy") -> pd.DataFrame:
     """
     ingredients = ['eggs', 'tomato', 'pasta', 'beef', 'bell pepper']
     meals = ['omelette', 'pasta salad', 'spaghetti bolognese', 'spaghetti bolognese', 'stir fry']
-    data = {'Ingredient': ingredients, 'Meal': meals}
     return pd.DataFrame({'ingredient': ingredients, 'meal': meals})
 
 
@@ -48,7 +47,9 @@ def create_meal_g(n: int = 5, country: str = "italy") -> nx.DiGraph:
     -------
     networkx.DiGraph
     """
-    df = create_meal_df()
+    ingredients = ['eggs', 'tomato', 'pasta', 'beef', 'bell pepper']
+    meals = ['omelette', 'pasta salad', 'spaghetti bolognese', 'spaghetti bolognese', 'stir fry']
+    df = pd.DataFrame({'ingredient': ingredients, 'meal': meals})
     return nx.from_pandas_edgelist(df, source="ingredient", target="meal", create_using=nx.DiGraph)
 EOF
 
@@ -239,6 +240,7 @@ author = "RAPIDS contrib"
 
 extensions = [
     "numpydoc",
+    "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
     "sphinx.ext.intersphinx",
@@ -299,6 +301,7 @@ Top-level functions
    create_meal_df
    create_meal_g
 EOF
+
 
 cat <<'EOF' >docs/source/index.rst
 Welcome to compatsphinxext's documentation!
