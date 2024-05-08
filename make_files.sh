@@ -4,7 +4,7 @@ cat <<'EOF' >README.rst
 compatsphinxext
 ===============
 
-See README.md
+blah blah blah
 EOF
 
 cat <<'EOF' >compatsphinxext.py
@@ -108,6 +108,12 @@ intersphinx_mapping = {
         "https://numpy.org/doc/stable/objects.inv",
     ),
 }
+
+def setup(app):
+    app.add_css_file("https://docs.rapids.ai/assets/css/custom.css")
+    app.add_js_file(
+        "https://docs.rapids.ai/assets/js/custom.js", loading_method="defer"
+    )
 EOF
 
 cat <<'EOF' >docs/source/api.rst
