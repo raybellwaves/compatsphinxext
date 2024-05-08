@@ -7,7 +7,7 @@ compatsphinxext
 See README.md
 EOF
 
-cat <<'EOF' >mylib.py
+cat <<'EOF' >compatsphinxext.py
 import networkx as nx
 import pandas as pd
 
