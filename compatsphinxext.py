@@ -23,7 +23,7 @@ def create_meal_df(n: int = 5, country: str = "italy") -> pd.DataFrame:
     return pd.DataFrame({'ingredient': ingredients, 'meal': meals})
 
 
-def create_meal_g(n: int = 5, country: str = "italy") -> nx.DiGraph
+def create_meal_g(n: int = 5, country: str = "italy") -> nx.DiGraph:
     """
     Return a :class:`networkx.DiGraph` of ingredients and meals.
 
