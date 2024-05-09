@@ -660,6 +660,11 @@ Installation
 ------------
 
 blah blah blah.
+
+TODOS
+-----
+
+.. todolist::
 EOF
 
 cd docs

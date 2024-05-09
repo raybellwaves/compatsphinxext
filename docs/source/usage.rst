@@ -7,3 +7,8 @@ Installation
 ------------
 
 blah blah blah.
+
+TODOS
+-----
+
+.. todolist::
