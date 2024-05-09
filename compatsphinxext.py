@@ -53,7 +53,7 @@ def create_meal_g(n: int = 5, country: str = "italy") -> nx.DiGraph:
 
 def reindex(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Use :func:`pandas.DataFrame.reindex` and drop the first row of the
+    Use :meth:`pandas.DataFrame.reindex` and drop the first row of the
     :class:`pandas.DataFrame`.
 
     Parameters
@@ -69,7 +69,7 @@ def reindex(df: pd.DataFrame) -> pd.DataFrame:
     .. pandas-compat::
         **DataFrame.reindex**
 
-        This function has no args or kwargs compared to :func:`pandas.DataFrame.reindex`
+        This function has no args or kwargs compared to :meth:`pandas.DataFrame.reindex`
         This is the current RAPIDS sphinx ext.
     """
     return df.reindex(range(1, len(df)))
@@ -77,7 +77,7 @@ def reindex(df: pd.DataFrame) -> pd.DataFrame:
 
 def rename(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Use :func:`pandas.DataFrame.rename` and rename the first
+    Use :meth:`pandas.DataFrame.rename` and rename the first
     column of :class:`pandas.DataFrame` "YO!".
 
     Parameters
