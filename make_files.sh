@@ -66,6 +66,12 @@ def reindex(df: pd.DataFrame) -> pd.DataFrame:
     Returns
     -------
     pandas.DataFrame
+
+
+    .. pandas-compat::
+        **DataFrame.reindex**
+
+        This is the current RAPIDS sphinx ext.
     """
     return df.reindex(range(1, len(df)))
 EOF
