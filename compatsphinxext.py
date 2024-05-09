@@ -61,6 +61,32 @@ def reindex(df: pd.DataFrame) -> pd.DataFrame:
     .. pandas-compat::
         **DataFrame.reindex**
 
+        This function has no args or kwargs.
         This is the current RAPIDS sphinx ext.
     """
     return df.reindex(range(1, len(df)))
+
+
+def rename(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Use :func:`pandas.DataFrame.rename` and rename the first
+    column of :class:`pandas.DataFrame` "YO!".
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Pandas DataFrame.
+
+    Returns
+    -------
+    pandas.DataFrame
+
+
+    .. pandas-compat::
+        **DataFrame.rename**
+
+        Unlike pandas rename, which offers way more flexibility that,
+        This function only renames your first columns to "YO!".
+        This is the current RAPIDS sphinx ext.
+    """
+    return df.rename(columns={df.columns[0]: "YO!"})
