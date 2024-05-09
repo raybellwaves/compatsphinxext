@@ -350,6 +350,7 @@ Top-level functions
    create_meal_df
    create_meal_g
    reindex
+   rename
 EOF
 
 cat <<'EOF' >docs/source/compat.rst
