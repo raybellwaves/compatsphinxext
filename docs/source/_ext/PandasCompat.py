@@ -54,6 +54,7 @@ class PandasCompatDirective(SphinxDirective):
             _("Pandas Compatibility Note"),
         )
         PandasCompat_node["docname"] = self.env.docname
+        PandasCompat_node["target"] = targetnode        
         self.state.nested_parse(
             self.content, self.content_offset, PandasCompat_node
         )
@@ -152,28 +153,18 @@ class PandasCompatListProcessor:
             node.replace_self(content)
 
     def create_reference(self, pandascompat, docname):
-        description = _("<<original entry>>")
-        prefix = description[: description.find("<<")]
-        suffix = description[description.find(">>") + 2 :]
-
-        para = nodes.paragraph(classes=["pandas-compat-source"])
-        para += nodes.Text(prefix)
-
-        # Create a reference
-        linktext = nodes.emphasis(_("original entry"), _("original entry"))
-        reference = nodes.reference("", "", linktext, internal=True)
-        try:
-            reference["refuri"] = self.builder.get_relative_uri(
-                docname, pandascompat["docname"]
-            )
-            reference["refuri"] += "#" + pandascompat["ids"][0]
-        except NoUri:
-            # ignore if no URI can be determined, e.g. for LaTeX output
-            pass
-
-        para += reference
-        para += nodes.Text(suffix)
-
+        para = nodes.paragraph()
+        newnode = nodes.reference("", "")
+        innernode = nodes.emphasis(
+            _("[source]"), _("[source]")
+        )
+        newnode["refdocname"] = pandascompat["docname"]
+        newnode["refuri"] = self.builder.get_relative_uri(
+            docname, pandascompat["docname"]
+        )
+        newnode["refuri"] += "#" + pandascompat["target"]["refid"]
+        newnode.append(innernode)
+        para += newnode
         return para
 
     def resolve_reference(self, todo, docname: str) -> None:
