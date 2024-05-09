@@ -30,7 +30,6 @@ def create_meal_df(n: int = 5, country: str = "italy") -> pd.DataFrame:
 
     .. todo::
         Fix this and checkout :class:`pandas.DataFrame`.
-
     """
     ingredients = ['eggs', 'tomato', 'pasta', 'beef', 'bell pepper']
     meals = ['omelette', 'pasta salad', 'spaghetti bolognese', 'spaghetti bolognese', 'stir fry']
@@ -51,6 +50,10 @@ def create_meal_g(n: int = 5, country: str = "italy") -> nx.DiGraph:
     Returns
     -------
     networkx.DiGraph
+
+
+    .. todo::
+        Fix this and checkout :class:`networkx.DiGraph`.
     """
     ingredients = ['eggs', 'tomato', 'pasta', 'beef', 'bell pepper']
     meals = ['omelette', 'pasta salad', 'spaghetti bolognese', 'spaghetti bolognese', 'stir fry']
