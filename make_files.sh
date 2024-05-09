@@ -123,10 +123,14 @@ cat <<'EOF' >docs/source/_ext/PandasCompat.py
 # This file is adapted from official sphinx tutorial for `todo` extension:
 # https://www.sphinx-doc.org/en/master/development/tutorials/todo.html
 
+from typing import cast
+
 from docutils import nodes
 from docutils.parsers.rst import Directive
+from sphinx import addnodes
+from sphinx.domains import Domain
 from sphinx.locale import get_translation
-from sphinx.util.docutils import SphinxDirective
+from sphinx.util.docutils import SphinxDirective, new_document
 
 translator = get_translation("sphinx")
 
@@ -203,6 +207,28 @@ def merge_PandasCompats(app, env, docnames, other):
         )
 
 
+class PandasCompatdDomain(Domain):
+    name = "pandascompat"
+    label = "pandascompat"
+
+    @property
+    def pandascompats(self):
+        return self.data.setdefault("pandascompats", {})
+
+    def clear_doc(self, docname):
+        self.pandascompats.pop(docname, None)
+
+    def merge_domaindata(self, docnames, otherdata):
+        for docname in docnames:
+            self.pandascompats[docname] = otherdata["pandascompats"][docname]
+
+    def process_doc(self, env, docname, document):
+        pandascompats = self.pandascompats.setdefault(docname, [])
+        for pandascompat in document.findall(PandasCompat):
+            env.app.emit("pandascompat-defined", pandascompat)
+            pandascompats.append(pandascompat)
+
+
 def process_PandasCompat_nodes(app, doctree, fromdocname):
     if not app.config.include_pandas_compat:
         for node in doctree.traverse(PandasCompat):
@@ -212,6 +238,8 @@ def process_PandasCompat_nodes(app, doctree, fromdocname):
     # PandasCompats. Augment each PandasCompat with a backlink to the
     # original location.
     env = app.builder.env
+    domain = cast(PandasCompatdDomain, app.env.get_domain("pandascompat"))
+    document = new_document("")
 
     if not hasattr(env, "PandasCompat_all_pandas_compat"):
         env.PandasCompat_all_pandas_compat = []
@@ -225,6 +253,16 @@ def process_PandasCompat_nodes(app, doctree, fromdocname):
 
         for PandasCompat_info in env.PandasCompat_all_pandas_compat:
             para = nodes.paragraph()
+
+            # Resolve reference
+            # new_PandasCompat_info = PandasCompat_info.copy()
+            # docname = new_PandasCompat_info["docname"]
+            # for _node in new_PandasCompat_info.findall(addnodes.pending_xref):
+            #     if "refdoc" in _node:
+            #         _node["refdoc"] = docname
+            # document += new_PandasCompat_info
+            # env.resolve_references(document, docname,  app.builder)
+            # document.remove(new_PandasCompat_info)
 
             # Create a reference back to the original docstring
             newnode = nodes.reference("", "")
@@ -241,11 +279,10 @@ def process_PandasCompat_nodes(app, doctree, fromdocname):
 
             # Insert the reference node into PandasCompat node
             # Note that this node is a deepcopy from the original copy
-            # in the docstring, so changing this does not affect that in the
-            # doc.
+            # in the docstring, so changing this does not affect that in the doc.
             PandasCompat_info["PandasCompat"].append(para)
 
-            # Insert the PandasCompand node into the PandasCompatList Node
+            # Insert the PandasCompant node into the PandasCompatList Node
             content.append(PandasCompat_info["PandasCompat"])
 
         node.replace_self(content)
@@ -267,6 +304,7 @@ def setup(app):
     # Sphinx directives are lower-cased
     app.add_directive("pandas-compat", PandasCompatDirective)
     app.add_directive("pandas-compat-list", PandasCompatListDirective)
+    app.add_domain(PandasCompatdDomain)
     app.connect("doctree-resolved", process_PandasCompat_nodes)
     app.connect("env-purge-doc", purge_PandasCompats)
     app.connect("env-merge-info", merge_PandasCompats)
