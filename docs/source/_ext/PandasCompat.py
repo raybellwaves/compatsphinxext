@@ -7,6 +7,7 @@ from docutils import nodes
 from docutils.parsers.rst import Directive
 from sphinx.locale import get_translation
 from sphinx.util.docutils import SphinxDirective
+from sphinx.writers.html import HTML5Translator
 
 translator = get_translation("sphinx")
 
@@ -19,11 +20,14 @@ class PandasCompatList(nodes.General, nodes.Element):
     pass
 
 
-def visit_PandasCompat_node(self, node):
-    self.visit_admonition(node)
+def visit_PandasCompat_node(self: HTML5Translator, node: PandasCompat) -> None:
+    if self.config.include_pandas_compat:
+        self.visit_admonition(node)
+    else:
+        raise nodes.SkipNode
 
 
-def depart_PandasCompat_node(self, node):
+def depart_PandasCompat_node(self: HTML5Translator, node: PandasCompat) -> None:
     self.depart_admonition(node)
 
 
@@ -46,9 +50,7 @@ class PandasCompatDirective(SphinxDirective):
             translator("Pandas Compatibility Note"),
             translator("Pandas Compatibility Note"),
         )
-        self.state.nested_parse(
-            self.content, self.content_offset, PandasCompat_node
-        )
+        self.state.nested_parse(self.content, self.content_offset, PandasCompat_node)
 
         if not hasattr(self.env, "PandasCompat_all_pandas_compat"):
             self.env.PandasCompat_all_pandas_compat = []
@@ -79,9 +81,7 @@ def merge_PandasCompats(app, env, docnames, other):
     if not hasattr(env, "PandasCompat_all_pandas_compat"):
         env.PandasCompat_all_pandas_compat = []
     if hasattr(other, "PandasCompat_all_pandas_compat"):
-        env.PandasCompat_all_pandas_compat.extend(
-            other.PandasCompat_all_pandas_compat
-        )
+        env.PandasCompat_all_pandas_compat.extend(other.PandasCompat_all_pandas_compat)
 
 
 def process_PandasCompat_nodes(app, doctree, fromdocname):
@@ -109,9 +109,7 @@ def process_PandasCompat_nodes(app, doctree, fromdocname):
 
             # Create a reference back to the original docstring
             newnode = nodes.reference("", "")
-            innernode = nodes.emphasis(
-                translator("[source]"), translator("[source]")
-            )
+            innernode = nodes.emphasis(translator("[source]"), translator("[source]"))
             newnode["refdocname"] = PandasCompat_info["docname"]
             newnode["refuri"] = app.builder.get_relative_uri(
                 fromdocname, PandasCompat_info["docname"]
