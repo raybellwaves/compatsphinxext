@@ -25,4 +25,5 @@ I've got a first draft passing.
 
 TODO:
  - Add the source like into the Admonition like it is currently.
+ - Add typing similar to the sphinx todo extention
  - Copy paste to create a networkx-compat.
