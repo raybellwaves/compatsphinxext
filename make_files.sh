@@ -123,6 +123,8 @@ cat <<'EOF' >docs/source/_ext/PandasCompat.py
 # This file is adapted from official sphinx tutorial for `todo` extension:
 # https://www.sphinx-doc.org/en/master/development/tutorials/todo.html
 
+import functools
+import operator
 from typing import cast
 
 from docutils import nodes
@@ -239,6 +241,9 @@ def process_PandasCompat_nodes(app, doctree, fromdocname):
     # original location.
     env = app.builder.env
     domain = cast(PandasCompatdDomain, app.env.get_domain("pandascompat"))
+    pandascompats = functools.reduce(
+        operator.iadd, domain.pandascompats.values(), []
+    )
     document = new_document("")
 
     if not hasattr(env, "PandasCompat_all_pandas_compat"):
@@ -251,18 +256,20 @@ def process_PandasCompat_nodes(app, doctree, fromdocname):
 
         content = []
 
-        for PandasCompat_info in env.PandasCompat_all_pandas_compat:
+        for PandasCompat_info, _pandascompat in zip(env.PandasCompat_all_pandas_compat, pandascompats):
             para = nodes.paragraph()
 
             # Resolve reference
-            # new_PandasCompat_info = PandasCompat_info.copy()
-            # docname = new_PandasCompat_info["docname"]
-            # for _node in new_PandasCompat_info.findall(addnodes.pending_xref):
-            #     if "refdoc" in _node:
-            #         _node["refdoc"] = docname
-            # document += new_PandasCompat_info
-            # env.resolve_references(document, docname,  app.builder)
-            # document.remove(new_PandasCompat_info)
+            new__pandascompat = _pandascompat.copy()
+            new__pandascompat["ids"].clear()
+            docname = PandasCompat_info["docname"]
+            for _node in new__pandascompat.findall(addnodes.pending_xref):
+                if "refdoc" in _node:
+                    _node["refdoc"] = docname
+            document += new__pandascompat
+            env.resolve_references(document, docname, app.builder)
+            document.remove(new__pandascompat)
+            content.append(new__pandascompat)
 
             # Create a reference back to the original docstring
             newnode = nodes.reference("", "")
