@@ -77,10 +77,9 @@ def reindex(df: pd.DataFrame) -> pd.DataFrame:
 
 
     .. pandas-compat::
-        **DataFrame.reindex**
+        :meth:`pandas.DataFrame.reindex`
 
-        This function has no args or kwargs compared to :meth:`pandas.DataFrame.reindex`
-        This is the current RAPIDS sphinx ext.
+        This function has no args or kwargs compared to the pandas version.
     """
     return df.reindex(range(1, len(df)))
 
@@ -101,11 +100,10 @@ def rename(df: pd.DataFrame) -> pd.DataFrame:
 
 
     .. pandas-compat::
-        **DataFrame.rename**
+        :meth:`pandas.DataFrame.rename`
 
-        Unlike pandas rename, which offers way more flexibility that,
-        This function only renames your first columns to "YO!".
-        This is the current RAPIDS sphinx ext.
+        Unlike pandas rename, which offers way more flexibility than this,
+        This function simply renames your first columns to "YO!".
     """
     return df.rename(columns={df.columns[0]: "YO!"})
 EOF
