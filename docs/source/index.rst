@@ -12,3 +12,4 @@ Check out the :doc:`usage` section for further information, including how to
 
    Usasge <usage>
    API Reference <api>
+   Compatability <compat>

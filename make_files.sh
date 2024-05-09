@@ -326,6 +326,19 @@ Top-level functions
    reindex
 EOF
 
+cat <<'EOF' >docs/source/compat.rst
+.. currentmodule:: compatsphinxext
+
+.. _compat:
+
+#############
+Compatability
+#############
+
+.. pandas-compat-list::
+
+EOF
+
 
 cat <<'EOF' >docs/source/index.rst
 Welcome to compatsphinxext's documentation!
@@ -342,6 +355,7 @@ Check out the :doc:`usage` section for further information, including how to
 
    Usasge <usage>
    API Reference <api>
+   Compatability <compat>
 EOF
 
 cat <<'EOF' >docs/source/usage.rst
