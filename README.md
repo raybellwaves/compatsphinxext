@@ -25,8 +25,9 @@ I've got a first draft passing.
 
 TODO:
  - Add the source like into the Admonition like it is currently.
+ - Clean up code
  - Add typing similar to the sphinx todo extention
- - Copy paste to create a networkx-compat.
+ - Copy paste classes to create a networkx-compat extention.
  - If interst from RAPIDS folks, move to https://github.com/rapidsai-community
  - Release
  - Add to cudf and cugraph
