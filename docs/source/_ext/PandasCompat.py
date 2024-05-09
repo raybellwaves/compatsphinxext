@@ -4,7 +4,9 @@
 # https://www.sphinx-doc.org/en/master/development/tutorials/todo.html
 
 from docutils import nodes
+from docutils.nodes import Element, Node
 from docutils.parsers.rst import Directive
+from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 from sphinx.locale import get_translation
 from sphinx.util.docutils import SphinxDirective
 from sphinx.writers.html import HTML5Translator
@@ -36,12 +38,13 @@ class PandasCompatListDirective(Directive):
         return [PandasCompatList("")]
 
 
-class PandasCompatDirective(SphinxDirective):
+class PandasCompatDirective(BaseAdmonition, SphinxDirective):
 
     # this enables content in the directive
+    node_class = PandasCompat
     has_content = True
 
-    def run(self):
+    def run(self) -> list[Node]:
         targetid = "PandasCompat-%d" % self.env.new_serialno("PandasCompat")
         targetnode = nodes.target("", "", ids=[targetid])
 
