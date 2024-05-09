@@ -132,6 +132,7 @@ from docutils.nodes import Element
 from docutils.parsers.rst import Directive
 from sphinx import addnodes
 from sphinx.domains import Domain
+from sphinx.errors import NoUri
 from sphinx.locale import _, get_translation
 from sphinx.util.docutils import SphinxDirective, new_document
 
@@ -170,8 +171,9 @@ class PandasCompatDirective(SphinxDirective):
 
         PandasCompat_node = PandasCompat("\n".join(self.content))
         PandasCompat_node += nodes.title(
-            translator("Pandas Compatibility Note"),
+            _("Pandas Compatibility Note"),
         )
+        PandasCompat_node["docname"] = self.env.docname
         self.state.nested_parse(
             self.content, self.content_offset, PandasCompat_node
         )
@@ -264,21 +266,17 @@ class PandasCompatListProcessor:
                 self.resolve_reference(new_pandascompat, docname)
                 content.append(new_pandascompat)
 
-                #ref = self.create_reference(pandascompat, docname)
-                #content.append(ref)
+                ref = self.create_reference(pandascompat, docname)
+                content.append(ref)
 
             node.replace_self(content)
 
     def create_reference(self, pandascompat, docname):
-        description = _("(The <<original entry>> is located in %s, line %d.)") % (
-            pandascompat.source,
-            pandascompat.line,
-        )
-
+        description = _("<<original entry>>")
         prefix = description[: description.find("<<")]
         suffix = description[description.find(">>") + 2 :]
 
-        para = nodes.paragraph(classes=["pandascompat-source"])
+        para = nodes.paragraph(classes=["pandas-compat-source"])
         para += nodes.Text(prefix)
 
         # Create a reference
@@ -288,7 +286,7 @@ class PandasCompatListProcessor:
             reference["refuri"] = self.builder.get_relative_uri(
                 docname, pandascompat["docname"]
             )
-            reference["refuri"] += "#" + todo["ids"][0]
+            reference["refuri"] += "#" + pandascompat["ids"][0]
         except NoUri:
             # ignore if no URI can be determined, e.g. for LaTeX output
             pass
