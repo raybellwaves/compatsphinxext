@@ -762,4 +762,4 @@ cd docs
 # EOF
 
 #make html
-sphinx-build -b html docs/source docs/_build/html -T -a -E -P
+sphinx-build -b html docs/source docs/build/html -T -a -E -P

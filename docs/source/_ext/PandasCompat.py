@@ -8,6 +8,7 @@ import operator
 from typing import cast
 
 from docutils import nodes
+from docutils.nodes import Element
 from docutils.parsers.rst import Directive
 from sphinx import addnodes
 from sphinx.domains import Domain
@@ -111,74 +112,90 @@ class PandasCompatdDomain(Domain):
             pandascompats.append(pandascompat)
 
 
-def process_PandasCompat_nodes(app, doctree, fromdocname):
-    if not app.config.include_pandas_compat:
-        for node in doctree.traverse(PandasCompat):
-            node.parent.remove(node)
+class PandasCompatListProcessor:
+    def __init__(self, app, doctree, docname):
+        self.builder = app.builder
+        self.config = app.config
+        self.env = app.env
+        self.domain = cast(PandasCompatdDomain, app.env.get_domain("pandascompat"))
+        self.document = new_document("")
+        print("running self.process")
+        self.process(doctree, docname)
 
-    # Replace all PandasCompatList nodes with a list of the collected
-    # PandasCompats. Augment each PandasCompat with a backlink to the
-    # original location.
-    env = app.builder.env
-    domain = cast(PandasCompatdDomain, app.env.get_domain("pandascompat"))
-    pandascompats = functools.reduce(
-        operator.iadd, domain.pandascompats.values(), []
-    )
-    document = new_document("")
+    def process(self, doctree: nodes.document, docname: str) -> None:
+        pandascompats = functools.reduce(
+            operator.iadd, self.domain.pandascompats.values(), []
+        )
+        for node in list(doctree.findall(pandascompats)):
+            if not self.config.include_pandas_compat:
+                node.parent.remove(node)
+                continue
 
-    if not hasattr(env, "PandasCompat_all_pandas_compat"):
-        env.PandasCompat_all_pandas_compat = []
+            if node.get("ids"):
+                content: list[Element] = [nodes.target()]
+            else:
+                content = []
 
-    for node in doctree.traverse(PandasCompatList):
-        if not app.config.include_pandas_compat:
-            node.replace_self([])
-            continue
+            for pandascompat in pandascompats:
+                # Create a copy of the pandascompat node
+                new_pandascompat = pandascompat.deepcopy()
+                new_pandascompat["ids"].clear()
 
-        content = []
+                self.resolve_reference(new_pandascompat, docname)
+                content.append(new_pandascompat)
 
-        for PandasCompat_info, _pandascompat in zip(env.PandasCompat_all_pandas_compat, pandascompats):
-            para = nodes.paragraph()
+                ref = self.create_reference(pandascompat, docname)
+                content.append(ref)
 
-            # Resolve reference
-            new__pandascompat = _pandascompat.copy()
-            new__pandascompat["ids"].clear()
-            docname = PandasCompat_info["docname"]
-            for _node in new__pandascompat.findall(addnodes.pending_xref):
-                if "refdoc" in _node:
-                    _node["refdoc"] = docname
-            document += new__pandascompat
-            env.resolve_references(document, docname, app.builder)
-            document.remove(new__pandascompat)
-            content.append(new__pandascompat)
+            node.replace_self(content)
 
-            # Create a reference back to the original docstring
-            newnode = nodes.reference("", "")
-            innernode = nodes.emphasis(
-                translator("[source]"), translator("[source]")
+    def create_reference(self, pandascompat, docname):
+        description = _("(The <<original entry>> is located in %s, line %d.)") % (
+            pandascompat.source,
+            pandascompat.line,
+        )
+
+        prefix = description[: description.find("<<")]
+        suffix = description[description.find(">>") + 2 :]
+
+        para = nodes.paragraph(classes=["pandascompat-source"])
+        para += nodes.Text(prefix)
+
+        # Create a reference
+        linktext = nodes.emphasis(_("original entry"), _("original entry"))
+        reference = nodes.reference("", "", linktext, internal=True)
+        try:
+            reference["refuri"] = self.builder.get_relative_uri(
+                docname, pandascompat["docname"]
             )
-            newnode["refdocname"] = PandasCompat_info["docname"]
-            newnode["refuri"] = app.builder.get_relative_uri(
-                fromdocname, PandasCompat_info["docname"]
-            )
-            newnode["refuri"] += "#" + PandasCompat_info["target"]["refid"]
-            newnode.append(innernode)
-            para += newnode
+            reference["refuri"] += "#" + todo["ids"][0]
+        except NoUri:
+            # ignore if no URI can be determined, e.g. for LaTeX output
+            pass
 
-            # Insert the reference node into PandasCompat node
-            # Note that this node is a deepcopy from the original copy
-            # in the docstring, so changing this does not affect that in the doc.
-            PandasCompat_info["PandasCompat"].append(para)
+        para += reference
+        para += nodes.Text(suffix)
 
-            # Insert the PandasCompant node into the PandasCompatList Node
-            content.append(PandasCompat_info["PandasCompat"])
+        return para
 
-        node.replace_self(content)
+    def resolve_reference(self, todo, docname: str) -> None:
+        """Resolve references in the todo content."""
+        for node in todo.findall(addnodes.pending_xref):
+            if "refdoc" in node:
+                node["refdoc"] = docname
+
+        # Note: To resolve references, it is needed to wrap it with document node
+        self.document += todo
+        self.env.resolve_references(self.document, docname, self.builder)
+        self.document.remove(todo)
 
 
 def setup(app):
+    print("running add_config_value")
     app.add_config_value("include_pandas_compat", False, "html")
-
+    print("running add_node(PandasCompatList)")
     app.add_node(PandasCompatList)
+    print("running add_node(PandasCompat)")
     app.add_node(
         PandasCompat,
         html=(visit_PandasCompat_node, depart_PandasCompat_node),
@@ -187,14 +204,14 @@ def setup(app):
         man=(visit_PandasCompat_node, depart_PandasCompat_node),
         texinfo=(visit_PandasCompat_node, depart_PandasCompat_node),
     )
-
-    # Sphinx directives are lower-cased
+    print("running add_directive('pandas-compat', PandasCompatDirective)")
     app.add_directive("pandas-compat", PandasCompatDirective)
+    print("running add_directive('pandas-compat-list', PandasCompatListDirective)")
     app.add_directive("pandas-compat-list", PandasCompatListDirective)
+    print("running add add_domain(PandasCompatdDomain)")
     app.add_domain(PandasCompatdDomain)
-    app.connect("doctree-resolved", process_PandasCompat_nodes)
-    app.connect("env-purge-doc", purge_PandasCompats)
-    app.connect("env-merge-info", merge_PandasCompats)
+    print("running app.connect('doctree-resolved', PandasCompatListProcessor)")   
+    app.connect("doctree-resolved", PandasCompatListProcessor)
 
     return {
         "version": "0.1",

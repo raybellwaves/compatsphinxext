@@ -69,7 +69,7 @@ def reindex(df: pd.DataFrame) -> pd.DataFrame:
     .. pandas-compat::
         **DataFrame.reindex**
 
-        This function has no args or kwargs compared to pandas.DataFrame.reindex
+        This function has no args or kwargs compared to :func:`pandas.DataFrame.reindex`
         This is the current RAPIDS sphinx ext.
     """
     return df.reindex(range(1, len(df)))
