@@ -7,9 +7,9 @@ Host on rapids-contrib, Publish it on pypi then it can be used across cudf and c
 
 cudf and cugraph uses "numpydoc" (https://github.com/rapidsai/cudf/blob/branch-24.06/docs/cudf/source/conf.py#L72C6-L72C14)
 
-The only file to touch is the make_files.sh
+The only file to touch is the make_files.sh.
 
-Current if you try and add :func:`pandas.DataFrame.rename` for example into pandas-compat you get
+Current if you try and add :meth:`pandas.DataFrame.rename` for example into pandas-compat you get
 
 ```
 /workspaces/compatsphinxext/compatsphinxext.py:docstring of compatsphinxext.rename:19: WARNING: unknown node type: <pending_xref: <literal...>>
@@ -21,3 +21,8 @@ NotImplementedError: <class 'types.BootstrapHTML5Translator'> departing unknown 
 The full traceback has been saved in /tmp/sphinx-err-mvruu8cb.log, if you want to report the issue to the developers.
 ```
 
+I've got a first draft passing.
+
+TODO:
+ - Add the source like into the Admonition like it is currently.
+ - Copy paste to create a networkx-compat.
