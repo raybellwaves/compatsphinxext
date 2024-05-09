@@ -41,3 +41,20 @@ def create_meal_g(n: int = 5, country: str = "italy") -> nx.DiGraph:
     meals = ['omelette', 'pasta salad', 'spaghetti bolognese', 'spaghetti bolognese', 'stir fry']
     df = pd.DataFrame({'ingredient': ingredients, 'meal': meals})
     return nx.from_pandas_edgelist(df, source="ingredient", target="meal", create_using=nx.DiGraph)
+
+
+def reindex(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Use :func:`pandas.DataFrame.reindex` and drop the first row of the
+    :class:`pandas.DataFrame`.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Pandas DataFrame.
+
+    Returns
+    -------
+    pandas.DataFrame
+    """
+    return df.reindex(range(1, len(df)))
