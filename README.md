@@ -9,4 +9,15 @@ cudf and cugraph uses "numpydoc" (https://github.com/rapidsai/cudf/blob/branch-2
 
 The only file to touch is the make_files.sh
 
+Current if you try and add :func:`pandas.DataFrame.rename` for example into pandas-compat you get
+
+```
+/workspaces/compatsphinxext/compatsphinxext.py:docstring of compatsphinxext.rename:19: WARNING: unknown node type: <pending_xref: <literal...>>
+
+Exception occurred:
+  File "/home/vscode/.local/lib/python3.12/site-packages/docutils/nodes.py", line 2027, in unknown_departure
+    raise NotImplementedError(
+NotImplementedError: <class 'types.BootstrapHTML5Translator'> departing unknown node type: pending_xref
+The full traceback has been saved in /tmp/sphinx-err-mvruu8cb.log, if you want to report the issue to the developers.
+```
 

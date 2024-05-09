@@ -22,6 +22,7 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.intersphinx",
     "PandasCompat",
+    "todo",
 ]
 
 exclude_patterns = []
@@ -31,6 +32,8 @@ html_static_path = ["_static"]
 templates_path = ["_templates"]
 
 include_pandas_compat = True
+
+todo_include_todos = True
 
 autosummary_generate = True
 
