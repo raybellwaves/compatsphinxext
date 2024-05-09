@@ -50,7 +50,10 @@ class PandasCompatDirective(SphinxDirective):
         targetnode = nodes.target("", "", ids=[targetid])
 
         PandasCompat_node = PandasCompat("\n".join(self.content))
-        PandasCompat_node.insert(0, nodes.title(text=_("Pandas Compatibility Note")))
+        PandasCompat_node += nodes.title(
+            translator("Pandas Compatibility Note"),
+            translator("Pandas Compatibility Note"),
+        )
         PandasCompat_node["docname"] = self.env.docname
         PandasCompat_node["target"] = targetnode        
         self.state.nested_parse(
@@ -151,7 +154,6 @@ class PandasCompatListProcessor:
             node.replace_self(content)
 
     def create_reference(self, pandascompat, docname):
-
         para = nodes.paragraph()
         newnode = nodes.reference("", "")
         innernode = nodes.emphasis(
