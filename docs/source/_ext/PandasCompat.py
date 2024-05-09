@@ -141,6 +141,8 @@ def setup(app):
         html=(visit_PandasCompat_node, depart_PandasCompat_node),
         latex=(visit_PandasCompat_node, depart_PandasCompat_node),
         text=(visit_PandasCompat_node, depart_PandasCompat_node),
+        man=(visit_PandasCompat_node, depart_PandasCompat_node),
+        texinfo=(visit_PandasCompat_node, depart_PandasCompat_node),
     )
 
     # Sphinx directives are lower-cased
