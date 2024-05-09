@@ -44,7 +44,6 @@ class PandasCompatDirective(SphinxDirective):
         PandasCompat_node = PandasCompat("\n".join(self.content))
         PandasCompat_node += nodes.title(
             translator("Pandas Compatibility Note"),
-            translator("Pandas Compatibility Note"),
         )
         self.state.nested_parse(
             self.content, self.content_offset, PandasCompat_node
