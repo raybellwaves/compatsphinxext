@@ -12,7 +12,7 @@ from docutils.nodes import Element
 from docutils.parsers.rst import Directive
 from sphinx import addnodes
 from sphinx.domains import Domain
-from sphinx.locale import get_translation
+from sphinx.locale import _, get_translation
 from sphinx.util.docutils import SphinxDirective, new_document
 
 translator = get_translation("sphinx")
@@ -126,7 +126,7 @@ class PandasCompatListProcessor:
         pandascompats = functools.reduce(
             operator.iadd, self.domain.pandascompats.values(), []
         )
-        for node in list(doctree.findall(pandascompats)):
+        for node in list(doctree.findall(PandasCompatList)):
             if not self.config.include_pandas_compat:
                 node.parent.remove(node)
                 continue
@@ -144,8 +144,8 @@ class PandasCompatListProcessor:
                 self.resolve_reference(new_pandascompat, docname)
                 content.append(new_pandascompat)
 
-                ref = self.create_reference(pandascompat, docname)
-                content.append(ref)
+                #ref = self.create_reference(pandascompat, docname)
+                #content.append(ref)
 
             node.replace_self(content)
 
