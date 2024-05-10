@@ -94,7 +94,7 @@ def merge_PandasCompats(app, env, docnames, other):
         )
 
 
-class PandasCompatdDomain(Domain):
+class PandasCompatDomain(Domain):
     name = "pandascompat"
     label = "pandascompat"
 
@@ -121,7 +121,7 @@ class PandasCompatListProcessor:
         self.builder = app.builder
         self.config = app.config
         self.env = app.env
-        self.domain = cast(PandasCompatdDomain, app.env.get_domain("pandascompat"))
+        self.domain = cast(PandasCompatDomain, app.env.get_domain("pandascompat"))
         self.document = new_document("")
         self.process(doctree, docname)
 
@@ -134,10 +134,7 @@ class PandasCompatListProcessor:
                 node.parent.remove(node)
                 continue
 
-            if node.get("ids"):
-                content: list[Element] = [nodes.target()]
-            else:
-                content = []
+            content: list[Element | None] = [nodes.target()] if node.get("ids") else []
 
             for pandascompat in pandascompats:
                 # Create a copy of the pandascompat node
@@ -196,7 +193,7 @@ def setup(app):
     )
     app.add_directive("pandas-compat", PandasCompatDirective)
     app.add_directive("pandas-compat-list", PandasCompatListDirective)
-    app.add_domain(PandasCompatdDomain) 
+    app.add_domain(PandasCompatDomain) 
     app.connect("doctree-resolved", PandasCompatListProcessor)
 
     return {
