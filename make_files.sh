@@ -1,4 +1,5 @@
 #!/bin/sh
+# ./make_files.sh
 
 cat <<'EOF' >README.rst
 compatsphinxext
@@ -120,6 +121,7 @@ cat <<'EOF' >docs/source/_ext/PandasCompat.py
 
 # This file is adapted from official sphinx tutorial for `todo` extension:
 # https://www.sphinx-doc.org/en/master/development/tutorials/todo.html
+from __future__ import annotations
 
 import functools
 import operator
@@ -128,13 +130,12 @@ from typing import cast
 from docutils import nodes
 from docutils.nodes import Element
 from docutils.parsers.rst import Directive
+from docutils.parsers.rst.directives.admonitions import BaseAdmonition
 from sphinx import addnodes
 from sphinx.domains import Domain
 from sphinx.errors import NoUri
-from sphinx.locale import _, get_translation
+from sphinx.locale import _ as get_translation_sphinx
 from sphinx.util.docutils import SphinxDirective, new_document
-
-translator = get_translation("sphinx")
 
 
 class PandasCompat(nodes.Admonition, nodes.Element):
@@ -158,7 +159,7 @@ class PandasCompatListDirective(Directive):
         return [PandasCompatList("")]
 
 
-class PandasCompatDirective(SphinxDirective):
+class PandasCompatDirective(BaseAdmonition, SphinxDirective):
 
     # this enables content in the directive
     has_content = True
@@ -169,8 +170,8 @@ class PandasCompatDirective(SphinxDirective):
 
         PandasCompat_node = PandasCompat("\n".join(self.content))
         PandasCompat_node += nodes.title(
-            translator("Pandas Compatibility Note"),
-            translator("Pandas Compatibility Note"),
+            get_translation_sphinx("Pandas Compatibility Note"),
+            get_translation_sphinx("Pandas Compatibility Note"),
         )
         PandasCompat_node["docname"] = self.env.docname
         PandasCompat_node["target"] = targetnode        
@@ -241,7 +242,6 @@ class PandasCompatListProcessor:
         self.env = app.env
         self.domain = cast(PandasCompatdDomain, app.env.get_domain("pandascompat"))
         self.document = new_document("")
-        print("running self.process")
         self.process(doctree, docname)
 
     def process(self, doctree: nodes.document, docname: str) -> None:
@@ -275,13 +275,17 @@ class PandasCompatListProcessor:
         para = nodes.paragraph()
         newnode = nodes.reference("", "")
         innernode = nodes.emphasis(
-            _("[source]"), _("[source]")
+            get_translation_sphinx("[source]"), get_translation_sphinx("[source]")
         )
         newnode["refdocname"] = pandascompat["docname"]
-        newnode["refuri"] = self.builder.get_relative_uri(
-            docname, pandascompat["docname"]
-        )
-        newnode["refuri"] += "#" + pandascompat["target"]["refid"]
+        try:
+            newnode["refuri"] = self.builder.get_relative_uri(
+                docname, pandascompat["docname"]
+            )
+            newnode["refuri"] += "#" + pandascompat["target"]["refid"]
+        except NoUri:
+            # ignore if no URI can be determined, e.g. for LaTeX output
+            pass        
         newnode.append(innernode)
         para += newnode
         return para
@@ -299,11 +303,8 @@ class PandasCompatListProcessor:
 
 
 def setup(app):
-    print("running add_config_value")
     app.add_config_value("include_pandas_compat", False, "html")
-    print("running add_node(PandasCompatList)")
     app.add_node(PandasCompatList)
-    print("running add_node(PandasCompat)")
     app.add_node(
         PandasCompat,
         html=(visit_PandasCompat_node, depart_PandasCompat_node),
@@ -312,13 +313,9 @@ def setup(app):
         man=(visit_PandasCompat_node, depart_PandasCompat_node),
         texinfo=(visit_PandasCompat_node, depart_PandasCompat_node),
     )
-    print("running add_directive('pandas-compat', PandasCompatDirective)")
     app.add_directive("pandas-compat", PandasCompatDirective)
-    print("running add_directive('pandas-compat-list', PandasCompatListDirective)")
     app.add_directive("pandas-compat-list", PandasCompatListDirective)
-    print("running add add_domain(PandasCompatdDomain)")
-    app.add_domain(PandasCompatdDomain)
-    print("running app.connect('doctree-resolved', PandasCompatListProcessor)")   
+    app.add_domain(PandasCompatdDomain) 
     app.connect("doctree-resolved", PandasCompatListProcessor)
 
     return {
@@ -750,4 +747,7 @@ cd docs
 # EOF
 
 make html
+# if building and testing locally comment these out
+make clean
+# this will build with a debugger
 #sphinx-build -b html docs/source docs/build/html -T -a -E -P
