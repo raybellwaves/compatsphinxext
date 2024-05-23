@@ -125,7 +125,7 @@ class PandasCompatListProcessor:
 
     def process(self, doctree: nodes.document, docname: str) -> None:
         pandascompats = [v for vals in self.domain.pandascompats.values() for v in vals]
-        for node in list(doctree.findall(PandasCompatList)):
+        for node in doctree.findall(PandasCompatList):
             if not self.config.include_pandas_compat:
                 node.parent.remove(node)
                 continue
