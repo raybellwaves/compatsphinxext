@@ -4,8 +4,6 @@
 # https://www.sphinx-doc.org/en/master/development/tutorials/todo.html
 from __future__ import annotations
 
-import functools
-import operator
 from typing import cast
 
 from docutils import nodes
@@ -126,9 +124,7 @@ class PandasCompatListProcessor:
         self.process(doctree, docname)
 
     def process(self, doctree: nodes.document, docname: str) -> None:
-        pandascompats = functools.reduce(
-            operator.iadd, self.domain.pandascompats.values(), []
-        )
+        pandascompats = [v for vals in self.domain.pandascompats.values() for v in vals]
         for node in list(doctree.findall(PandasCompatList)):
             if not self.config.include_pandas_compat:
                 node.parent.remove(node)
