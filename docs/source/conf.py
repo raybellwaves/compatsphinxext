@@ -1,7 +1,9 @@
+import inspect
 import os
 import pathlib
 import subprocess
 import sys
+import warnings
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 sys.path.append(os.path.abspath("./_ext"))
 print(f"{sys.path=}")
@@ -59,6 +61,16 @@ intersphinx_mapping = {
         "https://numpy.org/doc/stable/objects.inv",
     ),
 }
+
+
+def linkcode_resolve(domain, info):
+    if domain != 'py':
+        return None
+    if not info['module']:
+        return None
+    filename = info['module'].replace('.', '/')
+    return "https://github.com/raybellwaves/compatsphinxext/%s.py" % filename
+
 
 def setup(app):
     app.add_css_file("https://docs.rapids.ai/assets/css/custom.css")
