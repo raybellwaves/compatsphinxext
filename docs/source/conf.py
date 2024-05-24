@@ -27,6 +27,9 @@ extensions = [
 
 exclude_patterns = []
 pygments_style = "sphinx"
+html_theme_options = {
+    "github_url": "https://github.com/raybellwaves/compatsphinxext",
+}
 html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 templates_path = ["_templates"]
