@@ -63,13 +63,63 @@ intersphinx_mapping = {
 }
 
 
-def linkcode_resolve(domain, info):
-    if domain != 'py':
+# based on numpy doc/source/conf.py
+def linkcode_resolve(domain, info) -> str | None:
+    """
+    Determine the URL corresponding to Python object
+    """
+    if domain != "py":
         return None
-    if not info['module']:
+
+    modname = info["module"]
+    fullname = info["fullname"]
+
+    submod = sys.modules.get(modname)
+    if submod is None:
         return None
-    filename = info['module'].replace('.', '/')
-    return "https://github.com/raybellwaves/compatsphinxext/%s.py" % filename
+
+    obj = submod
+    for part in fullname.split("."):
+        try:
+            with warnings.catch_warnings():
+                # Accessing deprecated objects will generate noisy warnings
+                warnings.simplefilter("ignore", FutureWarning)
+                obj = getattr(obj, part)
+        except AttributeError:
+            return None
+
+    try:
+        fn = inspect.getsourcefile(inspect.unwrap(obj))
+    except TypeError:
+        try:  # property
+            fn = inspect.getsourcefile(inspect.unwrap(obj.fget))
+        except (AttributeError, TypeError):
+            fn = None
+    if not fn:
+        return None
+
+    try:
+        source, lineno = inspect.getsourcelines(obj)
+    except TypeError:
+        try:  # property
+            source, lineno = inspect.getsourcelines(obj.fget)
+        except (AttributeError, TypeError):
+            lineno = None
+    except OSError:
+        lineno = None
+
+    if lineno:
+        linespec = f"#L{lineno}-L{lineno + len(source) - 1}"
+    else:
+        linespec = ""
+
+    mylib = pathlib.Path(__file__).parents[2].resolve().as_posix()
+    fn = os.path.relpath(fn, start=mylib)
+
+    return (
+        f"https://github.com/raybellwaves/{mylib}/blob/"
+        f"main/{fn}{linespec}"
+    )
 
 
 def setup(app):
