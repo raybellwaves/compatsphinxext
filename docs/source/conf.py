@@ -1,9 +1,7 @@
-import inspect
 import os
 import pathlib
 import subprocess
 import sys
-import warnings
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
 sys.path.append(os.path.abspath("./_ext"))
 print(f"{sys.path=}")
