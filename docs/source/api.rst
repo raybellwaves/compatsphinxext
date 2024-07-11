@@ -16,3 +16,4 @@ Top-level functions
    create_meal_g
    reindex
    rename
+   to_numeric
