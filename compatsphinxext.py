@@ -1,5 +1,6 @@
 import networkx as nx
 import pandas as pd
+import pyarrow as pa
 
 
 def create_meal_df(n: int = 5, country: str = "italy") -> pd.DataFrame:
@@ -140,3 +141,25 @@ def empty(df: pd.DataFrame) -> bool:
         No differences.
     """
     return df.empty
+
+
+def from_arrow(t: pa.Table) -> pd.DataFrame:
+    """
+    Use :meth:`pyarrow.Table.to_pandas`.
+
+    Parameters
+    ----------
+    s : pandas.Series
+        Pandas Series.
+
+    Returns
+    -------
+    pandas.Series
+
+
+    .. pandas-compat::
+        :meth:`pyarrow.Table.to_pandas`
+
+        No differences.
+    """
+    return t.to_pandas()

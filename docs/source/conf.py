@@ -49,6 +49,10 @@ intersphinx_mapping = {
         "https://docs.python.org/3",
         "https://docs.python.org/3/objects.inv",
     ),
+    "pyarrow": (
+        "https://arrow.apache.org/docs/",
+        None,
+    ),
     "networkx": (
         "https://networkx.org/documentation/stable/",
         "https://networkx.org/documentation/stable/objects.inv",
