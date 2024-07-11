@@ -118,3 +118,25 @@ def to_numeric(s: pd.Series) -> pd.Series:
         No differences.
     """
     return pd.to_numeric(s)
+
+
+def empty(df: pd.DataFrame) -> bool:
+    """
+    Use :attr:`pandas.DataFrame.empty`.
+
+    Parameters
+    ----------
+    s : pandas.Series
+        Pandas Series.
+
+    Returns
+    -------
+    pandas.Series
+
+
+    .. pandas-compat::
+        :attr:`pandas.DataFrame.empty`
+
+        No differences.
+    """
+    return df.empty
