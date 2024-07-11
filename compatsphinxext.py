@@ -100,7 +100,7 @@ def rename(df: pd.DataFrame) -> pd.DataFrame:
 
 def to_numeric(s: pd.Series) -> pd.Series:
     """
-    Use :meth:`pandas.to_numeric`.
+    Use :func:`pandas.to_numeric`.
 
     Parameters
     ----------
@@ -113,7 +113,7 @@ def to_numeric(s: pd.Series) -> pd.Series:
 
 
     .. pandas-compat::
-        :meth:`pandas.to_numeric`
+        :func:`pandas.to_numeric`
 
         No differences.
     """
