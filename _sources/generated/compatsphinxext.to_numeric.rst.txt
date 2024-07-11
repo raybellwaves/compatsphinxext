@@ -1,0 +1,6 @@
+﻿compatsphinxext.to\_numeric
+===========================
+
+.. currentmodule:: compatsphinxext
+
+.. autofunction:: to_numeric

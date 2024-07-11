@@ -1,0 +1,6 @@
+﻿compatsphinxext.ewm
+===================
+
+.. currentmodule:: compatsphinxext
+
+.. autofunction:: ewm

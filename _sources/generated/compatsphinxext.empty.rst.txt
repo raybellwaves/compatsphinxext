@@ -1,0 +1,6 @@
+﻿compatsphinxext.empty
+=====================
+
+.. currentmodule:: compatsphinxext
+
+.. autofunction:: empty
