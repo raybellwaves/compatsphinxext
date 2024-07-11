@@ -163,3 +163,25 @@ def from_arrow(t: pa.Table) -> pd.DataFrame:
         No differences.
     """
     return t.to_pandas()
+
+
+def ewm(df: pd.DataFrame) -> pd.core.window.ewm.ExponentialMovingWindow:
+    """
+    Uses :meth:`pandas.DataFrame.ewm`.
+
+    Parameters
+    ----------
+    s : pandas.Series
+        Pandas Series.
+
+    Returns
+    -------
+    pandas.Series
+
+
+    .. pandas-compat::
+        :meth:`pandas.DataFrame.ewm`
+
+        No differences.
+    """
+    return df.ewm(com=0.5)
