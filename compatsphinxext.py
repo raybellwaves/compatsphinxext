@@ -96,3 +96,25 @@ def rename(df: pd.DataFrame) -> pd.DataFrame:
         This function simply renames your first columns to "YO!".
     """
     return df.rename(columns={df.columns[0]: "YO!"})
+
+
+def to_numeric(s: pd.Series) -> pd.Series:
+    """
+    Use :meth:`pandas.to_numeric`.
+
+    Parameters
+    ----------
+    s : pandas.Series
+        Pandas Series.
+
+    Returns
+    -------
+    pandas.Series
+
+
+    .. pandas-compat::
+        :meth:`pandas.to_numeric`
+
+        No differences.
+    """
+    return pd.to_numeric(s)
